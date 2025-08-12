@@ -22,5 +22,6 @@ jobs:
           SERVER_USER: ${{ secrets.SERVER_USER }}
           SERVER_PASS: ${{ secrets.SERVER_PASS }}
           SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_PORT: ${{ secrets.SERVER_PORT }} # Add port as secret
         run: |
-          sshpass -p "$SERVER_PASS" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_HOST "echo 'Logged in after file change!' && uname -a"
+          sshpass -p "$SERVER_PASS" ssh -p "$SERVER_PORT" -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_HOST "echo 'Logged in after file change on custom port!' && uname -a"

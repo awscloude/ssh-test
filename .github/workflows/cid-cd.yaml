@@ -1,0 +1,26 @@
+name: SSH Login to Server on File Change
+
+on:
+  push:        # Trigger when files are pushed
+    branches:
+      - main   # Change to your branch name if different
+  pull_request: # Also trigger when PRs are opened/updated
+
+jobs:
+  ssh-login:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install sshpass
+        run: sudo apt-get update && sudo apt-get install -y sshpass
+
+      - name: SSH into server
+        env:
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          SERVER_PASS: ${{ secrets.SERVER_PASS }}
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+        run: |
+          sshpass -p "$SERVER_PASS" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_HOST "echo 'Logged in after file change!' && uname -a"
